@@ -71,7 +71,6 @@ if(isPost()){
         $active_token = sha1(uniqid().time());
         $data = [
             'fullname' => $filter['fullname'],
-            // 'address' => $filter['address'],
             'phone' => $filter['phone'],
             'password' => password_hash($filter['password'], PASSWORD_DEFAULT),
             'email' => $filter['email'],

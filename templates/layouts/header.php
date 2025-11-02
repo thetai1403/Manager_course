@@ -9,6 +9,21 @@ if(!isLogin()){
     redirect('?module=auth&action=login');
 } 
 
+//Lấy thông tin user
+
+$token = getSession('token_login');
+if(!empty($token)){
+    $checkTokenLogin = getOne("SELECT *FROM token_login WHERE token = '$token'");
+    if(!empty($checkTokenLogin)){
+        $user_id = $checkTokenLogin['user_id'];
+        $getUserDetail = getOne("SELECT  fullname, avatar FROM users WHERE id = $user_id");
+
+        if(!empty($getUserDetail)){
+            $nameUser = $getUserDetail ['fullname'];
+            $avatarUser = $getUserDetail ['avatar'];
+        }
+    }
+}
 ?>
 
 <!doctype html>
@@ -86,23 +101,23 @@ if(!isLogin()){
                     <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="./assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow"
-                                alt="User Image" />
-                            <span class="d-none d-md-inline">Alexander Pierce</span>
+                            <img src="<?php echo _HOST_URL;?>/<?php echo isset($avatarUser) ? $avatarUser : false; ?>"
+                                class="user-image rounded-circle shadow" alt="User Image" />
+                            <span class="d-none d-md-inline"><?php echo isset($nameUser) ? $nameUser : false; ?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
-                                <img src="./assets/img/user2-160x160.jpg" class="rounded-circle shadow"
-                                    alt="User Image" />
+                                <img src="<?php echo _HOST_URL; ?>/<?php echo isset($avatarUser) ? $avatarUser : false; ?>"
+                                    class="rounded-circle shadow" alt="User Image" />
                                 <p>
-                                    Alexander Pierce - Web Developer
-                                    <small>Member since Nov. 2023</small>
+                                    <?php echo isset($nameUser) ? $nameUser : false;?>
                                 </p>
                             </li>
                             <!--end::User Image-->
                             <li class="user-footer">
-                                <a href="#" style="width: 100%" class="btn btn-default btn-flat">Profile</a>
+                                <a href="?module=users&action=profile" style="width: 100%"
+                                    class="btn btn-default btn-flat">Profile</a>
                             </li>
                             <!--begin::Menu Footer-->
                             <li class="user-footer">

@@ -84,11 +84,12 @@ if(isPost()){
 
     }
 
+}
+
     $msg = getSessionFlash('msg');
     $msg_type = getSessionFlash('msg_type');
     $oldData = getSessionFlash('oldData');
     $errorsArr =  getSessionFlash('errors');
-}
 ?>
 <div class="container add-user">
     <h2>Thêm mới khóa học</h2>
@@ -156,7 +157,7 @@ if(isPost()){
             <div class="col-6 pb-3">
                 <label for="thumbnail">Thumbnail</label>
                 <input id="thumbnail" name="thumbnail" type="file" class="form-control">
-                <img id="preview" src="" alt="">
+                <img width="200px" id="previewImage" class="preview-image p-3" src="#" alt="">
             </div>
             <div class="col-3 pb-3">
                 <label for="group">Lĩnh vực</label>
@@ -175,6 +176,46 @@ if(isPost()){
 
     </form>
 </div>
+
+<script>
+const thumbInput = document.getElementById('thumbnail');
+const previewImg = document.getElementById('previewImage');
+
+thumbInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.setAttribute('src', e.target.result);
+            previewImg.style.display = 'block!important';
+        }
+        reader.readAsDataURL(file);
+    } else {
+        previewImg.style.display = 'none';
+    }
+
+});
+</script>
+
+<script>
+//Hàm chuyển text thành slug
+function createSlug(strig) {
+    return strig.toLowerCase() // chuyển hết sang chữ thường
+        .normalize('NFD') // chuyển ký tự có dấu thành tổ hợp: é -> e + ´
+        .replace(/[\u0300-\u036f]/g, '') // xoá dấu
+        .replace(/đ/g, 'd') // thay đ -> d
+        .replace(/[^a-z0-9\s]/g, '') // xoá ký tự đặc biệt
+        .trim() // bỏ khoảng trắng đầu/cuối
+        .replace(/\s+/g, '-') // thay khoảng trắng -> -
+        .replace(/-+/g, '-'); // bỏ trùng dấu -
+}
+
+document.getElementById('name').addEventListener('input', function() {
+    const getValue = this.value;
+    document.getElementById('slug').value = createSlug(getValue);
+})
+</script>
+
 
 <?php
 layout('footer');
